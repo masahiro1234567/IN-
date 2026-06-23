@@ -280,6 +280,26 @@ function isActive(student) {
   return (student.status || "active") !== "archived";
 }
 
+// Firebaseの students は「配列」または「ランダムキーで各メンバーを持つオブジェクト」の
+// どちらの形式でも読み込めるようにする（既存の別システムのデータ形式にも対応）
+function normalizeStudentsData(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) {
+    return raw.filter(Boolean).map((s, i) => ({ ...s, id: s.id || String(i + 1) }));
+  }
+  if (typeof raw === "object") {
+    return Object.entries(raw).map(([key, val]) => ({ ...val, id: val.id || key, months: val.months || [] }));
+  }
+  return [];
+}
+// 保存する際は、元がオブジェクト形式だった場合の互換性も考え、
+// id をキーにしたオブジェクト形式で書き込む（他システムからの参照にも安全）
+function studentsToFirebaseShape(students) {
+  const obj = {};
+  students.forEach((s) => { obj[s.id] = s; });
+  return obj;
+}
+
 /* ============================================================
    AI分析
    ============================================================ */
@@ -676,7 +696,7 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
       return { ...s, months };
     });
 
-    await fbSet("students", updated);
+    await fbSet("students", studentsToFirebaseShape(updated));
     onSave(updated);
     onClose();
   }
@@ -803,7 +823,7 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
       if (s.id !== student.id) return s;
       return { ...s, months: s.months.map((m) => (m.month === month ? { ...m, 定性, 定性詳細, 定性コメント, 定量 } : m)) };
     });
-    await fbSet("students", updated);
+    await fbSet("students", studentsToFirebaseShape(updated));
     onSave(updated);
     setSaved(true);
   }
@@ -903,14 +923,17 @@ export default function INDashboard() {
         fbGet("config/history"),
         fbGet("settings/theme"),
       ]);
-      if (fbStudents && Array.isArray(fbStudents) && fbStudents.length) {
-        setStudents(fbStudents);
-        setSelected(fbStudents[0]);
-        const months = getAllMonths(fbStudents);
-        const years = getAllYears(fbStudents);
-        const y = pickDefaultYear(years);
-        setSelectedYear(y);
-        setSelectedMonth(pickDefaultMonth(months, y));
+      if (fbStudents) {
+        const normalized = normalizeStudentsData(fbStudents);
+        if (normalized.length) {
+          setStudents(normalized);
+          setSelected(normalized[0]);
+          const months = getAllMonths(normalized);
+          const years = getAllYears(normalized);
+          const y = pickDefaultYear(years);
+          setSelectedYear(y);
+          setSelectedMonth(pickDefaultMonth(months, y));
+        }
       }
       if (fbHistory && Object.keys(fbHistory).length) setConfigHistory(fbHistory);
       if (fbTheme && THEMES[fbTheme]) setThemeId(fbTheme);
@@ -929,7 +952,7 @@ export default function INDashboard() {
   async function handleArchiveToggle(studentId) {
     const updated = students.map((s) => (s.id === studentId ? { ...s, status: isActive(s) ? "archived" : "active" } : s));
     setStudents(updated);
-    await fbSet("students", updated);
+    await fbSet("students", studentsToFirebaseShape(updated));
   }
 
   function handleThemeChange(id) {
