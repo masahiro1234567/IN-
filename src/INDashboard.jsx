@@ -282,13 +282,25 @@ function isActive(student) {
 
 // Firebaseの students は「配列」または「ランダムキーで各メンバーを持つオブジェクト」の
 // どちらの形式でも読み込めるようにする（既存の別システムのデータ形式にも対応）
+// months も「配列」「ランダムキー付きオブジェクト」どちらの形式でも対応
+function normalizeMonths(rawMonths) {
+  if (!rawMonths) return [];
+  if (Array.isArray(rawMonths)) return rawMonths.filter(Boolean);
+  if (typeof rawMonths === "object") {
+    return Object.entries(rawMonths)
+      .map(([key, val]) => (val && typeof val === "object" ? { ...val, month: val.month || key } : null))
+      .filter(Boolean);
+  }
+  return [];
+}
+
 function normalizeStudentsData(raw) {
   if (!raw) return [];
   if (Array.isArray(raw)) {
-    return raw.filter(Boolean).map((s, i) => ({ ...s, id: s.id || String(i + 1) }));
+    return raw.filter(Boolean).map((s, i) => ({ ...s, id: s.id || String(i + 1), months: normalizeMonths(s.months) }));
   }
   if (typeof raw === "object") {
-    return Object.entries(raw).map(([key, val]) => ({ ...val, id: val.id || key, months: val.months || [] }));
+    return Object.entries(raw).map(([key, val]) => ({ ...val, id: val.id || key, months: normalizeMonths(val.months) }));
   }
   return [];
 }
