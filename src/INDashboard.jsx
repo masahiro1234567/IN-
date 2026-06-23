@@ -375,7 +375,7 @@ function MiniLineChart({ student }) {
         <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={xs[xs.length - 1]} cy={ys[ys.length - 1]} r="2.5" fill={color} />
       </svg>
-      <span style={{ fontSize: "10px", color, fontFamily: "monospace" }}>{trend > 0 ? `+${trend}` : trend}</span>
+      <span style={{ fontSize: "16px", color, fontFamily: "monospace" }}>{trend > 0 ? `+${trend}` : trend}</span>
     </div>
   );
 }
@@ -400,7 +400,7 @@ function RankingChart({ students, selectedMonth, mode, theme, maxScore }) {
     return (
       <div>
         {ranked.length === 0 && (
-          <div style={{ fontSize: "12px", color: theme.t(0.4), padding: "12px 0" }}>前月データがないため上昇値を表示できません</div>
+          <div style={{ fontSize: "16px", color: theme.t(0.4), padding: "12px 0" }}>前月データがないため上昇値を表示できません</div>
         )}
         {ranked.map((d, i) => {
           const pct = Math.round((Math.abs(d.diff) / maxAbs) * 100);
@@ -438,13 +438,13 @@ function RankingChart({ students, selectedMonth, mode, theme, maxScore }) {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {d.diff !== null && (
-                <span style={{ fontSize: "11px", color: d.diff > 0 ? "#81C784" : d.diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>
+                <span style={{ fontSize: "13px", color: d.diff > 0 ? "#81C784" : d.diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>
                   {d.diff > 0 ? `+${d.diff}` : d.diff}
                 </span>
               )}
-              <span style={{ fontSize: "13px", fontFamily: "monospace", color: theme.accent }}>
+              <span style={{ fontSize: "13px", fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>
                 {d.score}
-                <span style={{ fontSize: "10px", color: theme.t(0.4) }}>/{maxScore}</span>
+                <span style={{ fontSize: "16px", color: theme.t(0.4) }}>/{maxScore}</span>
               </span>
             </div>
           </div>
@@ -485,7 +485,7 @@ function RadarChart({ data, size = 180, subitemsConfig, theme }) {
       })}
       {categories.map((cat, i) => {
         const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-        return <text key={cat} x={cx + Math.cos(angle) * (r + 20)} y={cy + Math.sin(angle) * (r + 20)} textAnchor="middle" dominantBaseline="middle" fill={CATEGORY_COLORS[cat]} fontSize="8" fontWeight="600">{cat}</text>;
+        return <text key={cat} x={cx + Math.cos(angle) * (r + 20)} y={cy + Math.sin(angle) * (r + 20)} textAnchor="middle" dominantBaseline="middle" fill={CATEGORY_COLORS[cat]} stroke="rgba(0,0,0,0.4)" strokeWidth="0.4" paintOrder="stroke" fontSize="10" fontWeight="700">{cat}</text>;
       })}
     </svg>
   );
@@ -498,7 +498,7 @@ function ThemePicker({ themeId, onChange, theme }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ position: "relative" }}>
-      <button onClick={() => setOpen((o) => !o)} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "7px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, cursor: "pointer", fontSize: "12px", fontFamily: "'Noto Sans JP', sans-serif" }}>
+      <button onClick={() => setOpen((o) => !o)} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "7px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, cursor: "pointer", fontSize: "16px", fontFamily: "'Noto Sans JP', sans-serif" }}>
         <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: THEMES[themeId].swatch, border: `1px solid ${theme.t(0.25)}`, display: "inline-block" }} />
         テーマ：{THEMES[themeId].name}
       </button>
@@ -547,16 +547,16 @@ function AdminLogin({ adminUser, onLogin, onLogout, theme }) {
 
   return (
     <div style={{ border: `1px solid ${theme.accentA(0.25)}`, background: theme.accentA(0.05), borderRadius: "10px", padding: "14px", marginBottom: "18px" }}>
-      <div style={{ fontSize: "11px", color: theme.t(0.5), letterSpacing: "1px", marginBottom: "10px" }}>管理者ログイン</div>
+      <div style={{ fontSize: "13px", color: theme.t(0.5), letterSpacing: "1px", marginBottom: "10px" }}>管理者ログイン</div>
       {adminUser ? (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "12px", color: theme.text }}>{adminUser.name || adminUser.email} としてログイン中</span>
-          <button onClick={onLogout} style={{ padding: "6px 12px", background: "transparent", border: `1px solid ${theme.t(0.2)}`, borderRadius: "6px", color: theme.t(0.5), cursor: "pointer", fontSize: "11px" }}>ログアウト</button>
+          <span style={{ fontSize: "16px", color: theme.text }}>{adminUser.name || adminUser.email} としてログイン中</span>
+          <button onClick={onLogout} style={{ padding: "6px 12px", background: "transparent", border: `1px solid ${theme.t(0.2)}`, borderRadius: "6px", color: theme.t(0.5), cursor: "pointer", fontSize: "13px" }}>ログアウト</button>
         </div>
       ) : configured ? (
         <div ref={btnRef} />
       ) : (
-        <div style={{ fontSize: "11px", color: theme.t(0.45), lineHeight: "1.6" }}>
+        <div style={{ fontSize: "13px", color: theme.t(0.45), lineHeight: "1.6" }}>
           Googleログインは準備中です（FIREBASE_WEB_API_KEY / GOOGLE_OAUTH_CLIENT_ID の設定が必要）。設定が完了するまでは、ログインなしで編集できます。
         </div>
       )}
@@ -608,29 +608,29 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
       <div style={{ background: theme.bgSolid, border: `1px solid ${theme.t(0.12)}`, borderRadius: "14px", width: "min(720px, 100%)", maxHeight: "88vh", overflowY: "auto", padding: "24px", color: theme.text }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-          <div style={{ fontSize: "18px", fontWeight: "700" }}>管理画面 — 評価項目の編集</div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: theme.t(0.5), fontSize: "18px", cursor: "pointer" }}>×</button>
+          <div style={{ fontSize: "20px", fontWeight: "700" }}>管理画面 — 評価項目の編集</div>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", color: theme.t(0.5), fontSize: "16px", cursor: "pointer" }}>×</button>
         </div>
 
         <AdminLogin adminUser={adminUser} onLogin={setAdminUser} onLogout={() => setAdminUser(null)} theme={theme} />
 
-        <div style={{ fontSize: "12px", color: theme.t(0.45), marginBottom: "16px" }}>
+        <div style={{ fontSize: "16px", color: theme.t(0.45), marginBottom: "16px" }}>
           評価項目を変更すると「適用開始月」以降の月にのみ反映されます。それより前の月のデータ・表示は変更されません。
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "10px", background: theme.accentA(0.06), border: `1px solid ${theme.accentA(0.2)}`, borderRadius: "10px", padding: "14px" }}>
           <div>
-            <div style={{ fontSize: "11px", color: theme.t(0.5), marginBottom: "6px" }}>編集のベースにする版</div>
-            <select value={baseKey} onChange={(e) => loadBase(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "12px" }}>
+            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>編集のベースにする版</div>
+            <select value={baseKey} onChange={(e) => loadBase(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "16px" }}>
               {historyKeys.map((k) => <option key={k} value={k}>{monthLabel(k)}〜 適用の版</option>)}
             </select>
           </div>
           <div>
-            <div style={{ fontSize: "11px", color: theme.t(0.5), marginBottom: "6px" }}>この変更の適用開始月</div>
-            <input type="month" value={effective} onChange={(e) => setEffective(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "12px", colorScheme: "light" }} />
+            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>この変更の適用開始月</div>
+            <input type="month" value={effective} onChange={(e) => setEffective(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "16px", colorScheme: "light" }} />
           </div>
         </div>
-        <div style={{ fontSize: "11px", color: isNewVersion ? "#34A853" : "#E8710A", marginBottom: "16px" }}>
+        <div style={{ fontSize: "13px", color: isNewVersion ? "#34A853" : "#E8710A", marginBottom: "16px" }}>
           {isNewVersion ? `※ ${monthLabel(effective)}以降に適用される新しい版として保存されます` : `※ 既存の${monthLabel(effective)}〜の版を上書きします`}
         </div>
 
@@ -640,17 +640,17 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
           return (
             <div key={cat} style={{ marginBottom: "20px", border: `1px solid ${theme.t(0.08)}`, borderRadius: "10px", padding: "14px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}</div>
-                <div style={{ fontSize: "12px", fontFamily: "monospace", color: theme.t(0.4) }}>満点合計：{max}</div>
+                <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</div>
+                <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>満点合計：{max}</div>
               </div>
               {items.map((it, idx) => (
                 <div key={it.key} style={{ display: "flex", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
-                  <input value={it.label} onChange={(e) => updateItem(cat, idx, "label", e.target.value)} style={{ flex: 1, padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "12px" }} />
-                  <input type="number" value={it.max} onChange={(e) => updateItem(cat, idx, "max", e.target.value)} style={{ width: "70px", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "12px" }} />
+                  <input value={it.label} onChange={(e) => updateItem(cat, idx, "label", e.target.value)} style={{ flex: 1, padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "16px" }} />
+                  <input type="number" value={it.max} onChange={(e) => updateItem(cat, idx, "max", e.target.value)} style={{ width: "70px", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "16px" }} />
                   <button onClick={() => removeItem(cat, idx)} style={{ background: "transparent", border: "none", color: "#EA4335", cursor: "pointer", fontSize: "16px", padding: "4px" }}>×</button>
                 </div>
               ))}
-              <button onClick={() => addItem(cat)} style={{ marginTop: "4px", padding: "6px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.accent, cursor: "pointer", fontSize: "11px" }}>+ 項目追加</button>
+              <button onClick={() => addItem(cat)} style={{ marginTop: "4px", padding: "6px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.accent, cursor: "pointer", fontSize: "13px" }}>+ 項目追加</button>
             </div>
           );
         })}
@@ -665,16 +665,42 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
 }
 
 /* ============================================================
+   評価項目の入力行（スライダー方式）
+   ============================================================ */
+function SliderRow({ label, max, value, onChange, theme }) {
+  const v = value === "" || value === undefined ? 0 : Number(value);
+  return (
+    <div style={{ marginBottom: "14px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+        <span style={{ fontSize: "13px", color: theme.t(0.65) }}>{label}</span>
+        <span style={{ fontSize: "13px", fontWeight: "600", color: theme.text, fontFamily: "monospace" }}>{v} / {max}</span>
+      </div>
+      <input
+        type="range"
+        min={0}
+        max={max}
+        step={1}
+        value={v}
+        onChange={(e) => onChange(e.target.value)}
+        style={{ width: "100%", accentColor: theme.accent }}
+      />
+    </div>
+  );
+}
+
+/* ============================================================
    データ入力モーダル（3ステップ）
    ============================================================ */
 function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
   const [step, setStep] = useState(1);
   const [studentId, setStudentId] = useState(students[0]?.id || "");
+  const [newStudentName, setNewStudentName] = useState("");
   const [month, setMonth] = useState("");
   const [subVals, setSubVals] = useState({}); // { category: { key: value } }
   const [catComments, setCatComments] = useState({}); // { category: text }
   const [quant, setQuant] = useState({ 営業pt: "", KPI達成率: "" });
 
+  const isNewStudent = studentId === "__new__";
   const fallbackKey = Object.keys(configHistory).sort().slice(-1)[0];
   const subitemsConfig = useMemo(() => getConfigForMonth(configHistory, month || fallbackKey), [configHistory, month, fallbackKey]);
 
@@ -686,7 +712,7 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
     return items.reduce((a, it) => a + (Number(subVals[cat]?.[it.key]) || 0), 0);
   }
 
-  const canNextStep1 = studentId && month;
+  const canNextStep1 = month && (isNewStudent ? newStudentName.trim() : studentId);
 
   async function handleSubmit() {
     const 定性 = {};
@@ -695,8 +721,15 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
     const 定性コメント = { ...catComments };
     const 定量 = { 営業pt: Number(quant.営業pt) || 0, KPI達成率: Number(quant.KPI達成率) || 0 };
 
-    const updated = students.map((s) => {
-      if (s.id !== studentId) return s;
+    let baseStudents = students;
+    let targetId = studentId;
+    if (isNewStudent) {
+      targetId = `s_${Date.now()}`;
+      baseStudents = [...students, { id: targetId, name: newStudentName.trim(), status: "active", months: [] }];
+    }
+
+    const updated = baseStudents.map((s) => {
+      if (s.id !== targetId) return s;
       const exists = s.months.find((m) => m.month === month);
       let months;
       if (exists) {
@@ -713,27 +746,37 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
     onClose();
   }
 
-  const selectedStudent = students.find((s) => s.id === studentId);
+  const selectedStudent = isNewStudent ? { name: newStudentName.trim() || "（新規）" } : students.find((s) => s.id === studentId);
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
       <div style={{ background: theme.bgSolid, border: `1px solid ${theme.t(0.12)}`, borderRadius: "14px", width: "min(640px, 100%)", maxHeight: "88vh", overflowY: "auto", padding: "28px", color: theme.text }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-          <div style={{ fontSize: "18px", fontWeight: "700" }}>データ入力</div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: theme.t(0.5), fontSize: "18px", cursor: "pointer" }}>×</button>
+          <div style={{ fontSize: "20px", fontWeight: "700" }}>データ入力</div>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", color: theme.t(0.5), fontSize: "16px", cursor: "pointer" }}>×</button>
         </div>
-        <div style={{ fontSize: "12px", color: theme.accent, letterSpacing: "1px", marginBottom: "22px" }}>STEP {step} / 3 — {step === 1 ? "対象者・対象月" : step === 2 ? "定性評価" : "定量評価・確認"}</div>
+        <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "1px", marginBottom: "22px", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>STEP {step} / 3 — {step === 1 ? "対象者・対象月" : step === 2 ? "定性評価" : "定量評価・確認"}</div>
 
         {step === 1 && (
           <div>
             <div style={{ marginBottom: "16px" }}>
-              <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>対象者</div>
+              <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>対象者</div>
               <select value={studentId} onChange={(e) => setStudentId(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }}>
                 {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                <option value="__new__">＋ 新規IN追加</option>
               </select>
+              {isNewStudent && (
+                <input
+                  autoFocus
+                  placeholder="新しいメンバーの名前"
+                  value={newStudentName}
+                  onChange={(e) => setNewStudentName(e.target.value)}
+                  style={{ width: "100%", marginTop: "8px", padding: "10px 12px", background: theme.accentA(0.06), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }}
+                />
+              )}
             </div>
             <div>
-              <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>対象月</div>
+              <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>対象月</div>
               <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px", colorScheme: theme.isLight ? "light" : "dark" }} />
             </div>
           </div>
@@ -748,16 +791,13 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
               return (
                 <div key={cat} style={{ marginBottom: "18px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}（/{max}点）</div>
-                    <div style={{ fontSize: "12px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
+                    <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}（/{max}点）</div>
+                    <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
                   </div>
                   {items.map((it) => (
-                    <div key={it.key} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-                      <div style={{ flex: 1, fontSize: "12px", color: theme.t(0.6) }}>{it.label}</div>
-                      <input type="number" min={0} max={it.max} placeholder={`0~${it.max}`} value={subVals[cat]?.[it.key] ?? ""} onChange={(e) => setSub(cat, it.key, e.target.value)} style={{ width: "70px", padding: "7px 8px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "12px" }} />
-                    </div>
+                    <SliderRow key={it.key} label={it.label} max={it.max} value={subVals[cat]?.[it.key]} onChange={(v) => setSub(cat, it.key, v)} theme={theme} />
                   ))}
-                  <textarea placeholder="コメント（任意）" value={catComments[cat] || ""} onChange={(e) => setCatComments((c) => ({ ...c, [cat]: e.target.value }))} style={{ width: "100%", marginTop: "6px", padding: "8px 10px", background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, fontSize: "12px", minHeight: "36px", fontFamily: "inherit", resize: "vertical" }} />
+                  <textarea placeholder="コメント（任意）" value={catComments[cat] || ""} onChange={(e) => setCatComments((c) => ({ ...c, [cat]: e.target.value }))} style={{ width: "100%", marginTop: "6px", padding: "8px 10px", background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, fontSize: "16px", minHeight: "36px", fontFamily: "inherit", resize: "vertical" }} />
                 </div>
               );
             })}
@@ -768,25 +808,25 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "20px" }}>
               <div>
-                <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>営業pt</div>
+                <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>営業pt</div>
                 <input type="number" value={quant.営業pt} onChange={(e) => setQuant((q) => ({ ...q, 営業pt: e.target.value }))} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }} />
               </div>
               <div>
-                <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>KPI達成率（%）</div>
+                <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>KPI達成率（%）</div>
                 <input type="number" value={quant.KPI達成率} onChange={(e) => setQuant((q) => ({ ...q, KPI達成率: e.target.value }))} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }} />
               </div>
             </div>
-            <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "10px", padding: "16px", fontSize: "12px" }}>
+            <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "10px", padding: "16px", fontSize: "16px" }}>
               <div style={{ marginBottom: "8px", color: theme.t(0.5) }}>確認：{selectedStudent?.name} / {monthLabel(month)}</div>
               {CATEGORY_ORDER.map((cat) => (
                 <div key={cat} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0" }}>
-                  <span style={{ color: CATEGORY_COLORS[cat] }}>{cat}</span>
+                  <span style={{ color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</span>
                   <span style={{ fontFamily: "monospace" }}>{catSubtotal(cat)} / {categoryMax(subitemsConfig, cat)}</span>
                 </div>
               ))}
               <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderTop: `1px solid ${theme.t(0.1)}`, marginTop: "6px", fontWeight: "600" }}>
                 <span>合計</span>
-                <span style={{ fontFamily: "monospace", color: theme.accent }}>{CATEGORY_ORDER.reduce((a, c) => a + catSubtotal(c), 0)} / {totalMax(subitemsConfig)}</span>
+                <span style={{ fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{CATEGORY_ORDER.reduce((a, c) => a + catSubtotal(c), 0)} / {totalMax(subitemsConfig)}</span>
               </div>
             </div>
           </div>
@@ -843,7 +883,7 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
   return (
     <div>
       {!hasDetail && (
-        <div style={{ background: "#FEF7E0", border: "1px solid #F4D35E", borderRadius: "8px", padding: "12px 14px", fontSize: "12px", color: "#7A5D00", marginBottom: "16px" }}>
+        <div style={{ background: "#FEF7E0", border: "1px solid #F4D35E", borderRadius: "8px", padding: "12px 14px", fontSize: "16px", color: "#7A5D00", marginBottom: "16px" }}>
           この月は小項目の内訳データがありません。下の項目を入力して保存すると、内訳付きのデータに更新されます（合計点は入力内容で再計算されます）。
         </div>
       )}
@@ -854,33 +894,30 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
         return (
           <div key={cat} style={{ marginBottom: "18px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}（/{max}点）</div>
-              <div style={{ fontSize: "12px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}（/{max}点）</div>
+              <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
             </div>
             {items.map((it) => (
-              <div key={it.key} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-                <div style={{ flex: 1, fontSize: "12px", color: theme.t(0.6) }}>{it.label}</div>
-                <input type="number" min={0} max={it.max} placeholder={`0~${it.max}`} value={subVals[cat]?.[it.key] ?? ""} onChange={(e) => setSub(cat, it.key, e.target.value)} style={{ width: "70px", padding: "7px 8px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.text, fontSize: "12px" }} />
-              </div>
+              <SliderRow key={it.key} label={it.label} max={it.max} value={subVals[cat]?.[it.key]} onChange={(v) => setSub(cat, it.key, v)} theme={theme} />
             ))}
-            <textarea placeholder="コメント（任意）" value={catComments[cat] || ""} onChange={(e) => { setCatComments((c) => ({ ...c, [cat]: e.target.value })); setSaved(false); }} style={{ width: "100%", marginTop: "6px", padding: "8px 10px", background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, fontSize: "12px", minHeight: "36px", fontFamily: "inherit", resize: "vertical" }} />
+            <textarea placeholder="コメント（任意）" value={catComments[cat] || ""} onChange={(e) => { setCatComments((c) => ({ ...c, [cat]: e.target.value })); setSaved(false); }} style={{ width: "100%", marginTop: "6px", padding: "8px 10px", background: theme.t(0.03), border: `1px solid ${theme.t(0.1)}`, borderRadius: "6px", color: theme.text, fontSize: "16px", minHeight: "36px", fontFamily: "inherit", resize: "vertical" }} />
           </div>
         );
       })}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "20px" }}>
         <div>
-          <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>営業pt</div>
+          <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>営業pt</div>
           <input type="number" value={quant.営業pt} onChange={(e) => { setQuant((q) => ({ ...q, 営業pt: e.target.value })); setSaved(false); }} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }} />
         </div>
         <div>
-          <div style={{ fontSize: "12px", color: theme.t(0.5), marginBottom: "6px" }}>KPI達成率（%）</div>
+          <div style={{ fontSize: "16px", color: theme.t(0.5), marginBottom: "6px" }}>KPI達成率（%）</div>
           <input type="number" value={quant.KPI達成率} onChange={(e) => { setQuant((q) => ({ ...q, KPI達成率: e.target.value })); setSaved(false); }} style={{ width: "100%", padding: "10px 12px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "8px", color: theme.text, fontSize: "13px" }} />
         </div>
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px" }}>
-        {saved && <span style={{ fontSize: "12px", color: "#34A853" }}>保存しました</span>}
+        {saved && <span style={{ fontSize: "16px", color: "#34A853" }}>保存しました</span>}
         <button onClick={handleSave} style={{ padding: "10px 20px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>この月の内容を保存</button>
       </div>
     </div>
@@ -1012,22 +1049,22 @@ export default function INDashboard() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: theme.bgGradient, fontFamily: "'Noto Sans JP', 'Hiragino Sans', sans-serif", color: theme.text, transition: "background 0.3s, color 0.3s" }}>
+    <div style={{ minHeight: "100vh", background: theme.bgGradient, fontFamily: "'Noto Sans JP', 'Hiragino Sans', sans-serif", color: theme.text, fontWeight: 500, transition: "background 0.3s, color 0.3s" }}>
       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
       {/* ヘッダー */}
       <div style={{ background: theme.t(0.03), borderBottom: `1px solid ${theme.t(0.08)}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
         <div>
-          <div style={{ fontSize: "10px", color: theme.accent, letterSpacing: "3px", fontFamily: "monospace", marginBottom: "3px" }}>PM DASHBOARD</div>
-          <div style={{ fontSize: "18px", fontWeight: "700" }}>IN 評価分析システム</div>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: theme.accent, letterSpacing: "3px", fontFamily: "monospace", marginBottom: "3px", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>PM DASHBOARD</div>
+          <div style={{ fontSize: "22px", fontWeight: "700" }}>IN 評価分析システム</div>
         </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-          <button onClick={() => setShowInput(true)} style={{ padding: "7px 14px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.5)}`, borderRadius: "6px", color: theme.accent, cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>+ データ入力</button>
-          <button onClick={() => setShowAdmin(true)} style={{ padding: "7px 14px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.t(0.7), cursor: "pointer", fontSize: "12px" }}>管理画面</button>
+          <button onClick={() => setShowInput(true)} style={{ padding: "7px 14px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.5)}`, borderRadius: "6px", color: theme.accent, cursor: "pointer", fontSize: "16px", fontWeight: "600" }}>+ データ入力</button>
+          <button onClick={() => setShowAdmin(true)} style={{ padding: "7px 14px", background: theme.t(0.04), border: `1px solid ${theme.t(0.12)}`, borderRadius: "6px", color: theme.t(0.7), cursor: "pointer", fontSize: "16px" }}>管理画面</button>
           <ThemePicker themeId={themeId} onChange={handleThemeChange} theme={theme} />
           <div style={{ display: "flex", gap: "8px", marginLeft: "4px" }}>
             {[["ranking", "ランキング"], ["detail", "個人詳細"]].map(([key, label]) => (
-              <button key={key} onClick={() => setActiveView(key)} style={{ padding: "7px 16px", background: activeView === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${activeView === key ? theme.accentA(0.5) : theme.t(0.1)}`, borderRadius: "6px", color: activeView === key ? theme.accent : theme.t(0.5), cursor: "pointer", fontSize: "12px", fontFamily: "'Noto Sans JP', sans-serif" }}>
+              <button key={key} onClick={() => setActiveView(key)} style={{ padding: "7px 16px", background: activeView === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${activeView === key ? theme.accentA(0.5) : theme.t(0.1)}`, borderRadius: "6px", color: activeView === key ? theme.accent : theme.t(0.5), cursor: "pointer", fontSize: "16px", fontFamily: "'Noto Sans JP', sans-serif" }}>
                 {label}
               </button>
             ))}
@@ -1037,16 +1074,16 @@ export default function INDashboard() {
 
       {/* 年・月選択バー */}
       <div style={{ background: theme.t(0.02), borderBottom: `1px solid ${theme.t(0.06)}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-        <div style={{ fontSize: "11px", color: theme.t(0.3), marginRight: "4px" }}>年選択</div>
-        <select value={selectedYear} onChange={(e) => handleYearChange(e.target.value)} style={{ padding: "6px 10px", background: theme.accentA(0.1), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.accent, fontWeight: "600", fontSize: "12px", fontFamily: "monospace", cursor: "pointer" }}>
+        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px" }}>年選択</div>
+        <select value={selectedYear} onChange={(e) => handleYearChange(e.target.value)} style={{ padding: "6px 10px", background: theme.accentA(0.1), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.accent, fontWeight: "600", fontSize: "16px", fontFamily: "monospace", cursor: "pointer" }}>
           {allYears.map((y) => <option key={y} value={y}>{y}年</option>)}
         </select>
         <div style={{ width: "1px", height: "20px", background: theme.t(0.1), margin: "0 6px" }} />
-        <div style={{ fontSize: "11px", color: theme.t(0.3), marginRight: "4px" }}>月選択</div>
+        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px" }}>月選択</div>
         {monthsInYear.map((m) => {
           const hasAnyData = allMonths.includes(m);
           return (
-            <button key={m} onClick={() => { setSelectedMonth(m); setAiComment(""); }} style={{ padding: "5px 12px", background: selectedMonth === m ? theme.accentA(0.2) : "transparent", border: `1px solid ${selectedMonth === m ? theme.accentA(0.6) : theme.t(0.1)}`, borderRadius: "20px", color: selectedMonth === m ? theme.accent : hasAnyData ? theme.t(0.4) : theme.t(0.25), cursor: "pointer", fontSize: "12px", fontFamily: "monospace" }}>
+            <button key={m} onClick={() => { setSelectedMonth(m); setAiComment(""); }} style={{ padding: "5px 12px", background: selectedMonth === m ? theme.accentA(0.2) : "transparent", border: `1px solid ${selectedMonth === m ? theme.accentA(0.6) : theme.t(0.1)}`, borderRadius: "20px", color: selectedMonth === m ? theme.accent : hasAnyData ? theme.t(0.4) : theme.t(0.25), cursor: "pointer", fontSize: "16px", fontFamily: "monospace" }}>
               {monthLabel(m)}
             </button>
           );
@@ -1058,9 +1095,9 @@ export default function INDashboard() {
         {/* サイドバー */}
         <div style={{ width: "220px", borderRight: `1px solid ${theme.t(0.06)}`, padding: "16px 0", overflowY: "auto", flexShrink: 0 }}>
           <div style={{ padding: "0 16px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "10px", color: theme.t(0.3), letterSpacing: "2px" }}>IN メンバー</span>
+            <span style={{ fontSize: "16px", color: theme.t(0.3), letterSpacing: "2px" }}>IN メンバー</span>
           </div>
-          <label style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 16px 12px", fontSize: "10px", color: theme.t(0.45), cursor: "pointer" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 16px 12px", fontSize: "16px", color: theme.t(0.45), cursor: "pointer" }}>
             <input type="checkbox" checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
             SAM昇格済み（非表示中）も表示する
           </label>
@@ -1077,14 +1114,14 @@ export default function INDashboard() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <div style={{ fontSize: "13px", fontWeight: isSelected ? "600" : "400" }}>
                     {s.name}
-                    {archived && <span style={{ marginLeft: "6px", fontSize: "9px", color: theme.t(0.4), border: `1px solid ${theme.t(0.2)}`, borderRadius: "4px", padding: "1px 4px" }}>SAM</span>}
+                    {archived && <span style={{ marginLeft: "6px", fontSize: "13px", color: theme.t(0.4), border: `1px solid ${theme.t(0.2)}`, borderRadius: "4px", padding: "1px 4px" }}>SAM</span>}
                   </div>
                   <select
                     value={archived ? "archived" : "active"}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => { e.stopPropagation(); handleArchiveToggle(s.id); }}
                     style={{
-                      fontSize: "10px",
+                      fontSize: "16px",
                       padding: "3px 6px",
                       borderRadius: "6px",
                       border: `1px solid ${archived ? theme.t(0.25) : theme.accentA(0.4)}`,
@@ -1102,15 +1139,15 @@ export default function INDashboard() {
                 {hasData && (
                   <div style={{ marginTop: "6px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
-                      <span style={{ fontSize: "10px", color: theme.t(0.3) }}>{monthLabel(selectedMonth)}</span>
-                      <span style={{ fontSize: "10px", color: theme.accent, fontFamily: "monospace" }}>{pct}%</span>
+                      <span style={{ fontSize: "16px", color: theme.t(0.3) }}>{monthLabel(selectedMonth)}</span>
+                      <span style={{ fontSize: "16px", color: theme.accent, fontFamily: "monospace", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{pct}%</span>
                     </div>
                     <div style={{ height: "3px", background: theme.t(0.1), borderRadius: "2px" }}>
                       <div style={{ width: `${pct}%`, height: "100%", background: theme.accent, borderRadius: "2px" }} />
                     </div>
                   </div>
                 )}
-                {!hasData && <div style={{ fontSize: "10px", color: theme.t(0.3) }}>データなし</div>}
+                {!hasData && <div style={{ fontSize: "16px", color: theme.t(0.3) }}>データなし</div>}
               </div>
             );
           })}
@@ -1126,18 +1163,18 @@ export default function INDashboard() {
                 <div style={{ fontSize: "13px", color: theme.t(0.4) }}>{monthLabel(selectedMonth)} — ランキング</div>
                 <div style={{ display: "flex", gap: "6px" }}>
                   {[["total", "総合点"], ["gain", "上昇値"]].map(([key, label]) => (
-                    <button key={key} onClick={() => setRankingTab(key)} style={{ padding: "6px 14px", background: rankingTab === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${rankingTab === key ? theme.accentA(0.5) : theme.t(0.1)}`, borderRadius: "20px", color: rankingTab === key ? theme.accent : theme.t(0.5), cursor: "pointer", fontSize: "12px" }}>{label}</button>
+                    <button key={key} onClick={() => setRankingTab(key)} style={{ padding: "6px 14px", background: rankingTab === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${rankingTab === key ? theme.accentA(0.5) : theme.t(0.1)}`, borderRadius: "20px", color: rankingTab === key ? theme.accent : theme.t(0.5), cursor: "pointer", fontSize: "16px" }}>{label}</button>
                   ))}
                 </div>
               </div>
               <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "24px", marginBottom: "16px" }}>
-                <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "20px" }}>{rankingTab === "total" ? "合計スコアランキング（先月比）" : "前月比 上昇値ランキング"}</div>
+                <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "20px" }}>{rankingTab === "total" ? "合計スコアランキング（先月比）" : "前月比 上昇値ランキング"}</div>
                 <RankingChart students={visibleStudents} selectedMonth={selectedMonth} mode={rankingTab} theme={theme} maxScore={MAX_SCORE} />
               </div>
 
               {/* 全員の推移を重ねて表示 */}
               <div style={{ background: theme.t(0.03), border: `1px solid ${theme.accentA(0.15)}`, borderRadius: "12px", padding: "24px" }}>
-                <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "20px" }}>全員の合計スコア推移</div>
+                <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "20px" }}>全員の合計スコア推移</div>
                 <div style={{ overflowX: "auto" }}>
                 {(() => {
                   const w = Math.max(640, allMonths.length * 110), h = 170, padL = 40, padR = 20, padT = 14, padB = 28;
@@ -1174,10 +1211,10 @@ export default function INDashboard() {
                           });
                         })}
                         {allMonths.map((m, i) => (
-                          <text key={m} x={padL + (i / (allMonths.length - 1 || 1)) * iw} y={h - 8} textAnchor="middle" fill={theme.t(0.45)} fontSize="10">{monthLabel(m)}</text>
+                          <text key={m} x={padL + (i / (allMonths.length - 1 || 1)) * iw} y={h - 8} textAnchor="middle" fill={theme.t(0.55)} fontSize="12" fontWeight="600">{monthLabel(m)}</text>
                         ))}
-                        <text x={padL - 4} y={padT + ih} textAnchor="end" fill={theme.t(0.3)} fontSize="9">0</text>
-                        <text x={padL - 4} y={padT + 4} textAnchor="end" fill={theme.t(0.3)} fontSize="9">{MAX_SCORE}</text>
+                        <text x={padL - 4} y={padT + ih} textAnchor="end" fill={theme.t(0.4)} fontSize="11">0</text>
+                        <text x={padL - 4} y={padT + 4} textAnchor="end" fill={theme.t(0.4)} fontSize="11">{MAX_SCORE}</text>
                     </svg>
                   );
                 })()}
@@ -1188,7 +1225,7 @@ export default function INDashboard() {
                     return (
                       <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                         <div style={{ width: "12px", height: "3px", background: colors[i % colors.length], borderRadius: "2px" }} />
-                        <span style={{ fontSize: "11px", color: theme.t(0.6) }}>{s.name}</span>
+                        <span style={{ fontSize: "13px", color: theme.t(0.6) }}>{s.name}</span>
                       </div>
                     );
                   })}
@@ -1208,15 +1245,15 @@ export default function INDashboard() {
                 <>
                   <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
                     <div>
-                      <div style={{ fontSize: "22px", fontWeight: "700", marginBottom: "2px" }}>{selected.name}</div>
-                      <div style={{ fontSize: "12px", color: theme.t(0.4) }}>{monthLabel(selectedMonth)} の評価</div>
+                      <div style={{ fontSize: "26px", fontWeight: "700", marginBottom: "2px" }}>{selected.name}</div>
+                      <div style={{ fontSize: "14px", fontWeight: "500", color: theme.t(0.5) }}>{monthLabel(selectedMonth)} の評価</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: "10px", color: theme.t(0.4), marginBottom: "2px" }}>合計スコア</div>
-                      <div style={{ fontSize: "28px", fontWeight: "700", fontFamily: "monospace", color: theme.accent }}>
-                        {score}<span style={{ fontSize: "14px", color: theme.t(0.4) }}>/{MAX_SCORE}</span>
+                      <div style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.5), marginBottom: "2px" }}>合計スコア</div>
+                      <div style={{ fontSize: "32px", fontWeight: "700", fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>
+                        {score}<span style={{ fontSize: "16px", color: theme.t(0.4) }}>/{MAX_SCORE}</span>
                         {scoreDiff !== null && (
-                          <span style={{ fontSize: "14px", color: scoreDiff > 0 ? "#81C784" : "#F06292", marginLeft: "8px" }}>
+                          <span style={{ fontSize: "16px", color: scoreDiff > 0 ? "#81C784" : "#F06292", marginLeft: "8px" }}>
                             {scoreDiff > 0 ? `+${scoreDiff}` : scoreDiff}
                           </span>
                         )}
@@ -1236,11 +1273,11 @@ export default function INDashboard() {
                     <div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
                         <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                          <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "12px", alignSelf: "flex-start" }}>定性評価レーダー</div>
+                          <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "12px", alignSelf: "flex-start" }}>定性評価レーダー</div>
                           <RadarChart data={selected.months.filter((_, i) => i <= monthIdx)} size={200} subitemsConfig={configForSelectedMonth} theme={theme} />
                         </div>
                         <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px" }}>
-                          <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "16px" }}>カテゴリ別スコア</div>
+                          <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "16px" }}>カテゴリ別スコア</div>
                           {CATEGORY_ORDER.map((cat) => {
                             const val = monthData.定性[cat] || 0;
                             const max = categoryMax(configForSelectedMonth, cat);
@@ -1251,22 +1288,22 @@ export default function INDashboard() {
                             return (
                               <div key={cat} style={{ marginBottom: "12px" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
-                                  <div style={{ fontSize: "12px", color: CATEGORY_COLORS[cat], fontWeight: "500" }}>{cat}</div>
+                                  <div style={{ fontSize: "16px", color: CATEGORY_COLORS[cat], fontWeight: "500", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</div>
                                   <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                                    {diff !== null && <span style={{ fontSize: "10px", color: diff > 0 ? "#81C784" : diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>{diff > 0 ? `+${diff}` : diff}</span>}
-                                    <span style={{ fontSize: "11px", fontFamily: "monospace" }}>{val}<span style={{ color: theme.t(0.3) }}>/{max}</span></span>
+                                    {diff !== null && <span style={{ fontSize: "16px", color: diff > 0 ? "#81C784" : diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>{diff > 0 ? `+${diff}` : diff}</span>}
+                                    <span style={{ fontSize: "13px", fontFamily: "monospace" }}>{val}<span style={{ color: theme.t(0.3) }}>/{max}</span></span>
                                   </div>
                                 </div>
                                 <div style={{ height: "5px", background: theme.t(0.08), borderRadius: "3px" }}>
                                   <div style={{ width: `${pct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "3px" }} />
                                 </div>
-                                {comment && <div style={{ fontSize: "10px", color: theme.t(0.4), marginTop: "4px" }}>{comment}</div>}
+                                {comment && <div style={{ fontSize: "16px", color: theme.t(0.4), marginTop: "4px" }}>{comment}</div>}
                                 {detail && (
                                   <div style={{ marginTop: "4px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
                                     {Object.entries(detail).map(([k, v]) => {
                                       const item = (configForSelectedMonth[cat] || []).find((s) => s.key === k);
                                       if (!item) return null;
-                                      return <span key={k} style={{ fontSize: "9px", color: theme.t(0.35), background: theme.t(0.04), borderRadius: "4px", padding: "2px 6px" }}>{item.label}: {v}/{item.max}</span>;
+                                      return <span key={k} style={{ fontSize: "13px", color: theme.t(0.35), background: theme.t(0.04), borderRadius: "4px", padding: "2px 6px" }}>{item.label}: {v}/{item.max}</span>;
                                     })}
                                   </div>
                                 )}
@@ -1276,12 +1313,12 @@ export default function INDashboard() {
                         </div>
                       </div>
                       <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px" }}>
-                        <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "16px" }}>定量評価</div>
+                        <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "16px" }}>定量評価</div>
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
                           {Object.entries(monthData.定量).map(([key, val]) => (
                             <div key={key} style={{ background: theme.t(0.04), borderRadius: "8px", padding: "12px", textAlign: "center" }}>
-                              <div style={{ fontSize: "10px", color: theme.t(0.4), marginBottom: "6px" }}>{key}</div>
-                              <div style={{ fontSize: "20px", fontWeight: "700", fontFamily: "monospace", color: "#FFB74D" }}>
+                              <div style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.5), marginBottom: "6px" }}>{key}</div>
+                              <div style={{ fontSize: "24px", fontWeight: "700", fontFamily: "monospace", color: "#FFB74D" }}>
                                 {typeof val === "number" && key.includes("率") ? `${val}%` : val || "—"}
                               </div>
                             </div>
@@ -1297,7 +1334,7 @@ export default function INDashboard() {
 
                   {activeTab === "trends" && (
                     <div style={{ background: theme.t(0.03), border: `1px solid ${theme.accentA(0.15)}`, borderRadius: "12px", padding: "24px" }}>
-                      <div style={{ fontSize: "11px", color: theme.t(0.4), marginBottom: "20px" }}>合計スコア推移（全期間）</div>
+                      <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "20px" }}>合計スコア推移（全期間）</div>
                       <div style={{ overflowX: "auto" }}>
                       {(() => {
                         const w = Math.max(640, selected.months.length * 120), h = 150, padL = 44, padR = 24, padT = 24, padB = 30;
@@ -1314,12 +1351,12 @@ export default function INDashboard() {
                               {vals.map((v, i) => (
                                 <g key={i}>
                                   <circle cx={xs[i]} cy={ys[i]} r={selected.months[i].month === selectedMonth ? 6 : 4.5} fill={selected.months[i].month === selectedMonth ? "#E8710A" : theme.accent} stroke={theme.bgSolid} strokeWidth="2" />
-                                  <text x={xs[i]} y={ys[i] - 12} textAnchor="middle" fill={selected.months[i].month === selectedMonth ? "#E8710A" : theme.accent} fontSize="12" fontFamily="monospace">{v}</text>
-                                  <text x={xs[i]} y={h - 8} textAnchor="middle" fill={theme.t(0.5)} fontSize="11">{monthLabel(selected.months[i].month)}</text>
+                                  <text x={xs[i]} y={ys[i] - 12} textAnchor="middle" fill={selected.months[i].month === selectedMonth ? "#E8710A" : theme.accent} fontSize="14" fontWeight="700" fontFamily="monospace">{v}</text>
+                                  <text x={xs[i]} y={h - 8} textAnchor="middle" fill={theme.t(0.6)} fontSize="13" fontWeight="600">{monthLabel(selected.months[i].month)}</text>
                                 </g>
                               ))}
-                              <text x={padL - 6} y={padT + ih} textAnchor="end" fill={theme.t(0.35)} fontSize="10">0</text>
-                              <text x={padL - 6} y={padT + 4} textAnchor="end" fill={theme.t(0.35)} fontSize="10">{MAX_SCORE}</text>
+                              <text x={padL - 6} y={padT + ih} textAnchor="end" fill={theme.t(0.45)} fontSize="12">0</text>
+                              <text x={padL - 6} y={padT + 4} textAnchor="end" fill={theme.t(0.45)} fontSize="12">{MAX_SCORE}</text>
                           </svg>
                         );
                       })()}
@@ -1330,12 +1367,12 @@ export default function INDashboard() {
                   {activeTab === "ai" && (
                     <div>
                       <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px", marginBottom: "16px" }}>
-                        <div style={{ fontSize: "12px", color: theme.t(0.4), marginBottom: "12px" }}>
+                        <div style={{ fontSize: "16px", color: theme.t(0.4), marginBottom: "12px" }}>
                           {monthLabel(selectedMonth)}の評価データをAIが分析し、面談前サマリーを生成します
                         </div>
                         <div style={{ display: "flex", gap: "6px", marginBottom: "14px" }}>
                           {[["claude", "Claude"], ["gemini", "Gemini（準備中）"]].map(([key, label]) => (
-                            <button key={key} onClick={() => setAiProvider(key)} style={{ padding: "5px 12px", background: aiProvider === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${aiProvider === key ? theme.accentA(0.5) : theme.t(0.12)}`, borderRadius: "20px", color: aiProvider === key ? theme.accent : theme.t(0.45), cursor: "pointer", fontSize: "11px" }}>{label}</button>
+                            <button key={key} onClick={() => setAiProvider(key)} style={{ padding: "5px 12px", background: aiProvider === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${aiProvider === key ? theme.accentA(0.5) : theme.t(0.12)}`, borderRadius: "20px", color: aiProvider === key ? theme.accent : theme.t(0.45), cursor: "pointer", fontSize: "13px" }}>{label}</button>
                           ))}
                         </div>
                         <button onClick={handleGenerateComment} disabled={loadingAI} style={{ padding: "10px 20px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.accent, cursor: loadingAI ? "not-allowed" : "pointer", fontSize: "13px", fontWeight: "600", fontFamily: "'Noto Sans JP', sans-serif", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -1344,7 +1381,7 @@ export default function INDashboard() {
                       </div>
                       {aiComment && (
                         <div style={{ background: theme.accentA(0.05), border: `1px solid ${theme.accentA(0.2)}`, borderRadius: "12px", padding: "20px", whiteSpace: "pre-wrap", lineHeight: "1.8", fontSize: "13px" }}>
-                          <div style={{ fontSize: "10px", color: theme.accent, letterSpacing: "2px", marginBottom: "12px", fontFamily: "monospace" }}>AI ANALYSIS — {selected.name} / {monthLabel(selectedMonth)}</div>
+                          <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "2px", marginBottom: "12px", fontFamily: "monospace", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>AI ANALYSIS — {selected.name} / {monthLabel(selectedMonth)}</div>
                           {aiComment}
                         </div>
                       )}
