@@ -442,7 +442,7 @@ function RankingChart({ students, selectedMonth, mode, theme, maxScore }) {
                   {d.diff > 0 ? `+${d.diff}` : d.diff}
                 </span>
               )}
-              <span style={{ fontSize: "13px", fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>
+              <span style={{ fontSize: "13px", fontFamily: "monospace", color: theme.accent }}>
                 {d.score}
                 <span style={{ fontSize: "16px", color: theme.t(0.4) }}>/{maxScore}</span>
               </span>
@@ -485,7 +485,7 @@ function RadarChart({ data, size = 180, subitemsConfig, theme }) {
       })}
       {categories.map((cat, i) => {
         const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-        return <text key={cat} x={cx + Math.cos(angle) * (r + 20)} y={cy + Math.sin(angle) * (r + 20)} textAnchor="middle" dominantBaseline="middle" fill={CATEGORY_COLORS[cat]} stroke="rgba(0,0,0,0.4)" strokeWidth="0.4" paintOrder="stroke" fontSize="10" fontWeight="700">{cat}</text>;
+        return <text key={cat} x={cx + Math.cos(angle) * (r + 20)} y={cy + Math.sin(angle) * (r + 20)} textAnchor="middle" dominantBaseline="middle" fill={CATEGORY_COLORS[cat]} fontSize="13" fontWeight="700">{cat}</text>;
       })}
     </svg>
   );
@@ -640,7 +640,7 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
           return (
             <div key={cat} style={{ marginBottom: "20px", border: `1px solid ${theme.t(0.08)}`, borderRadius: "10px", padding: "14px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</div>
+                <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}</div>
                 <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>満点合計：{max}</div>
               </div>
               {items.map((it, idx) => (
@@ -671,19 +671,21 @@ function SliderRow({ label, max, value, onChange, theme }) {
   const v = value === "" || value === undefined ? 0 : Number(value);
   return (
     <div style={{ marginBottom: "14px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
         <span style={{ fontSize: "13px", color: theme.t(0.65) }}>{label}</span>
         <span style={{ fontSize: "13px", fontWeight: "600", color: theme.text, fontFamily: "monospace" }}>{v} / {max}</span>
       </div>
-      <input
-        type="range"
-        min={0}
-        max={max}
-        step={1}
-        value={v}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", accentColor: theme.accent }}
-      />
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <input
+          type="range"
+          min={0}
+          max={max}
+          step={1}
+          value={v}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: "40%", accentColor: theme.accent }}
+        />
+      </div>
     </div>
   );
 }
@@ -755,7 +757,7 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
           <div style={{ fontSize: "20px", fontWeight: "700" }}>データ入力</div>
           <button onClick={onClose} style={{ background: "transparent", border: "none", color: theme.t(0.5), fontSize: "16px", cursor: "pointer" }}>×</button>
         </div>
-        <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "1px", marginBottom: "22px", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>STEP {step} / 3 — {step === 1 ? "対象者・対象月" : step === 2 ? "定性評価" : "定量評価・確認"}</div>
+        <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "1px", marginBottom: "22px" }}>STEP {step} / 3 — {step === 1 ? "対象者・対象月" : step === 2 ? "定性評価" : "定量評価・確認"}</div>
 
         {step === 1 && (
           <div>
@@ -791,7 +793,7 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
               return (
                 <div key={cat} style={{ marginBottom: "18px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}（/{max}点）</div>
+                    <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}（/{max}点）</div>
                     <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
                   </div>
                   {items.map((it) => (
@@ -820,13 +822,13 @@ function DataInputModal({ students, configHistory, onClose, onSave, theme }) {
               <div style={{ marginBottom: "8px", color: theme.t(0.5) }}>確認：{selectedStudent?.name} / {monthLabel(month)}</div>
               {CATEGORY_ORDER.map((cat) => (
                 <div key={cat} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0" }}>
-                  <span style={{ color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</span>
+                  <span style={{ color: CATEGORY_COLORS[cat] }}>{cat}</span>
                   <span style={{ fontFamily: "monospace" }}>{catSubtotal(cat)} / {categoryMax(subitemsConfig, cat)}</span>
                 </div>
               ))}
               <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderTop: `1px solid ${theme.t(0.1)}`, marginTop: "6px", fontWeight: "600" }}>
                 <span>合計</span>
-                <span style={{ fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{CATEGORY_ORDER.reduce((a, c) => a + catSubtotal(c), 0)} / {totalMax(subitemsConfig)}</span>
+                <span style={{ fontFamily: "monospace", color: theme.accent }}>{CATEGORY_ORDER.reduce((a, c) => a + catSubtotal(c), 0)} / {totalMax(subitemsConfig)}</span>
               </div>
             </div>
           </div>
@@ -894,7 +896,7 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
         return (
           <div key={cat} style={{ marginBottom: "18px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat], textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}（/{max}点）</div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: CATEGORY_COLORS[cat] }}>{cat}（/{max}点）</div>
               <div style={{ fontSize: "16px", fontFamily: "monospace", color: theme.t(0.4) }}>小計：{subtotal}</div>
             </div>
             {items.map((it) => (
@@ -1055,7 +1057,7 @@ export default function INDashboard() {
       {/* ヘッダー */}
       <div style={{ background: theme.t(0.03), borderBottom: `1px solid ${theme.t(0.08)}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
         <div>
-          <div style={{ fontSize: "12px", fontWeight: "700", color: theme.accent, letterSpacing: "3px", fontFamily: "monospace", marginBottom: "3px", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>PM DASHBOARD</div>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: theme.accent, letterSpacing: "3px", fontFamily: "monospace", marginBottom: "3px" }}>PM DASHBOARD</div>
           <div style={{ fontSize: "22px", fontWeight: "700" }}>IN 評価分析システム</div>
         </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
@@ -1140,7 +1142,7 @@ export default function INDashboard() {
                   <div style={{ marginTop: "6px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
                       <span style={{ fontSize: "16px", color: theme.t(0.3) }}>{monthLabel(selectedMonth)}</span>
-                      <span style={{ fontSize: "16px", color: theme.accent, fontFamily: "monospace", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{pct}%</span>
+                      <span style={{ fontSize: "16px", color: theme.accent, fontFamily: "monospace" }}>{pct}%</span>
                     </div>
                     <div style={{ height: "3px", background: theme.t(0.1), borderRadius: "2px" }}>
                       <div style={{ width: `${pct}%`, height: "100%", background: theme.accent, borderRadius: "2px" }} />
@@ -1250,7 +1252,7 @@ export default function INDashboard() {
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.5), marginBottom: "2px" }}>合計スコア</div>
-                      <div style={{ fontSize: "32px", fontWeight: "700", fontFamily: "monospace", color: theme.accent, textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>
+                      <div style={{ fontSize: "32px", fontWeight: "700", fontFamily: "monospace", color: theme.accent }}>
                         {score}<span style={{ fontSize: "16px", color: theme.t(0.4) }}>/{MAX_SCORE}</span>
                         {scoreDiff !== null && (
                           <span style={{ fontSize: "16px", color: scoreDiff > 0 ? "#81C784" : "#F06292", marginLeft: "8px" }}>
@@ -1288,14 +1290,14 @@ export default function INDashboard() {
                             return (
                               <div key={cat} style={{ marginBottom: "12px" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
-                                  <div style={{ fontSize: "16px", color: CATEGORY_COLORS[cat], fontWeight: "500", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>{cat}</div>
+                                  <div style={{ fontSize: "16px", color: CATEGORY_COLORS[cat], fontWeight: "500" }}>{cat}</div>
                                   <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                                     {diff !== null && <span style={{ fontSize: "16px", color: diff > 0 ? "#81C784" : diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>{diff > 0 ? `+${diff}` : diff}</span>}
-                                    <span style={{ fontSize: "13px", fontFamily: "monospace" }}>{val}<span style={{ color: theme.t(0.3) }}>/{max}</span></span>
+                                    <span style={{ fontSize: "20px", fontWeight: "700", fontFamily: "monospace" }}>{val}<span style={{ fontSize: "14px", fontWeight: "400", color: theme.t(0.35) }}>/{max}</span></span>
                                   </div>
                                 </div>
-                                <div style={{ height: "5px", background: theme.t(0.08), borderRadius: "3px" }}>
-                                  <div style={{ width: `${pct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "3px" }} />
+                                <div style={{ height: "10px", background: theme.t(0.08), borderRadius: "5px" }}>
+                                  <div style={{ width: `${pct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "5px" }} />
                                 </div>
                                 {comment && <div style={{ fontSize: "16px", color: theme.t(0.4), marginTop: "4px" }}>{comment}</div>}
                                 {detail && (
@@ -1381,7 +1383,7 @@ export default function INDashboard() {
                       </div>
                       {aiComment && (
                         <div style={{ background: theme.accentA(0.05), border: `1px solid ${theme.accentA(0.2)}`, borderRadius: "12px", padding: "20px", whiteSpace: "pre-wrap", lineHeight: "1.8", fontSize: "13px" }}>
-                          <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "2px", marginBottom: "12px", fontFamily: "monospace", textShadow: "-0.5px -0.5px 0 rgba(0,0,0,0.4), 0.5px -0.5px 0 rgba(0,0,0,0.4), -0.5px 0.5px 0 rgba(0,0,0,0.4), 0.5px 0.5px 0 rgba(0,0,0,0.4)" }}>AI ANALYSIS — {selected.name} / {monthLabel(selectedMonth)}</div>
+                          <div style={{ fontSize: "16px", color: theme.accent, letterSpacing: "2px", marginBottom: "12px", fontFamily: "monospace" }}>AI ANALYSIS — {selected.name} / {monthLabel(selectedMonth)}</div>
                           {aiComment}
                         </div>
                       )}
