@@ -931,7 +931,7 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
    ============================================================ */
 function PDCACard({ title, badge, fields, values, onChange, theme }) {
   return (
-    <div style={{ background: theme.bgSolid, borderRadius: "12px", border: `1px solid ${theme.t(0.08)}`, padding: "20px", marginBottom: "16px" }}>
+    <div style={{ background: theme.t(0.03), borderRadius: "12px", border: `1px solid ${theme.t(0.08)}`, padding: "20px", marginBottom: "16px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
         <div style={{ fontSize: "15px", fontWeight: "600", color: theme.accent }}>{title}</div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
