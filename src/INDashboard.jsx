@@ -620,18 +620,18 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "10px", background: theme.accentA(0.06), border: `1px solid ${theme.accentA(0.2)}`, borderRadius: "10px", padding: "14px" }}>
           <div>
-            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>編集のベースにする版</div>
+            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>ベース</div>
             <select value={baseKey} onChange={(e) => loadBase(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "16px" }}>
-              {historyKeys.map((k) => <option key={k} value={k}>{monthLabel(k)}〜 適用の版</option>)}
+              {historyKeys.map((k) => <option key={k} value={k}>{k.split("-")[0]}年{monthLabel(k)}〜 の設定</option>)}
             </select>
           </div>
           <div>
-            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>この変更の適用開始月</div>
+            <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>変更適用月</div>
             <input type="month" value={effective} onChange={(e) => setEffective(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: theme.t(0.04), border: `1px solid ${theme.t(0.15)}`, borderRadius: "6px", color: theme.text, fontSize: "16px", colorScheme: "light" }} />
           </div>
         </div>
         <div style={{ fontSize: "13px", color: isNewVersion ? "#34A853" : "#E8710A", marginBottom: "16px" }}>
-          {isNewVersion ? `※ ${monthLabel(effective)}以降に適用される新しい版として保存されます` : `※ 既存の${monthLabel(effective)}〜の版を上書きします`}
+          {isNewVersion ? `※ ${effective.split("-")[0]}年${monthLabel(effective)}以降に適用される新しい設定として保存されます` : `※ 既存の${effective.split("-")[0]}年${monthLabel(effective)}〜の設定を上書きします`}
         </div>
 
         {CATEGORY_ORDER.map((cat) => {
@@ -1004,6 +1004,14 @@ export default function INDashboard() {
   const [configHistory, setConfigHistory] = useState({ "2025-01": DEFAULT_SUBITEMS });
   const [themeId, setThemeId] = useState("black");
   const [loaded, setLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth <= 768 : false);
+  const [showMemberSwitcher, setShowMemberSwitcher] = useState(false);
+
+  useEffect(() => {
+    function onResize() { setIsMobile(window.innerWidth <= 768); }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const [activeView, setActiveView] = useState("ranking"); // ranking | detail
   const [rankingTab, setRankingTab] = useState("total"); // total | gain
@@ -1145,26 +1153,57 @@ export default function INDashboard() {
       </div>
 
       {/* 年・月選択バー */}
-      <div style={{ background: theme.t(0.02), borderBottom: `1px solid ${theme.t(0.06)}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px" }}>年選択</div>
-        <select value={selectedYear} onChange={(e) => handleYearChange(e.target.value)} style={{ padding: "6px 10px", background: theme.accentA(0.1), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.accent, fontWeight: "600", fontSize: "16px", fontFamily: "monospace", cursor: "pointer" }}>
+      <div style={{ background: theme.t(0.02), borderBottom: `1px solid ${theme.t(0.06)}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: isMobile ? "nowrap" : "wrap", overflowX: isMobile ? "auto" : "visible" }}>
+        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px", whiteSpace: "nowrap" }}>年選択</div>
+        <select value={selectedYear} onChange={(e) => handleYearChange(e.target.value)} style={{ padding: "6px 10px", background: theme.accentA(0.1), border: `1px solid ${theme.accentA(0.4)}`, borderRadius: "8px", color: theme.accent, fontWeight: "600", fontSize: "16px", fontFamily: "monospace", cursor: "pointer", flexShrink: 0 }}>
           {allYears.map((y) => <option key={y} value={y}>{y}年</option>)}
         </select>
-        <div style={{ width: "1px", height: "20px", background: theme.t(0.1), margin: "0 6px" }} />
-        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px" }}>月選択</div>
+        <div style={{ width: "1px", height: "20px", background: theme.t(0.1), margin: "0 6px", flexShrink: 0 }} />
+        <div style={{ fontSize: "13px", color: theme.t(0.3), marginRight: "4px", whiteSpace: "nowrap" }}>月選択</div>
         {monthsInYear.map((m) => {
           const hasAnyData = allMonths.includes(m);
           return (
-            <button key={m} onClick={() => { setSelectedMonth(m); setAiComment(""); }} style={{ padding: "5px 12px", background: selectedMonth === m ? theme.accentA(0.2) : "transparent", border: `1px solid ${selectedMonth === m ? theme.accentA(0.6) : theme.t(0.1)}`, borderRadius: "20px", color: selectedMonth === m ? theme.accent : hasAnyData ? theme.t(0.4) : theme.t(0.25), cursor: "pointer", fontSize: "16px", fontFamily: "monospace" }}>
+            <button key={m} onClick={() => { setSelectedMonth(m); setAiComment(""); }} style={{ padding: "5px 12px", background: selectedMonth === m ? theme.accentA(0.2) : "transparent", border: `1px solid ${selectedMonth === m ? theme.accentA(0.6) : theme.t(0.1)}`, borderRadius: "20px", color: selectedMonth === m ? theme.accent : hasAnyData ? theme.t(0.4) : theme.t(0.25), cursor: "pointer", fontSize: "16px", fontFamily: "monospace", flexShrink: 0, whiteSpace: "nowrap" }}>
               {monthLabel(m)}
             </button>
           );
         })}
       </div>
 
-      <div style={{ display: "flex", height: "calc(100vh - 115px)" }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: isMobile ? "auto" : "calc(100vh - 115px)" }}>
 
-        {/* サイドバー */}
+        {/* サイドバー（PC） / メンバー切替（モバイル） */}
+        {isMobile ? (
+          <div style={{ padding: "12px 16px", borderBottom: `1px solid ${theme.t(0.08)}`, position: "relative" }}>
+            <button onClick={() => setShowMemberSwitcher((v) => !v)} style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%", padding: "10px 14px", background: theme.bgSolid, border: `1px solid ${theme.t(0.15)}`, borderRadius: "20px", color: theme.text, fontSize: "14px", cursor: "pointer" }}>
+              <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: theme.accent, color: "#fff", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{(selected?.name || "?").slice(0, 1)}</span>
+              <span style={{ flex: 1, textAlign: "left", fontWeight: "600" }}>{selected?.name || "メンバーを選択"}</span>
+              <span style={{ fontSize: "12px", color: theme.t(0.4) }}>{showMemberSwitcher ? "▲" : "▼"}</span>
+            </button>
+            {showMemberSwitcher && (
+              <div style={{ position: "absolute", left: 16, right: 16, top: "calc(100% + 4px)", zIndex: 40, background: theme.bgSolid, border: `1px solid ${theme.t(0.12)}`, borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.18)", maxHeight: "60vh", overflowY: "auto" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 14px", fontSize: "12px", color: theme.t(0.45), cursor: "pointer", borderBottom: `1px solid ${theme.t(0.08)}` }}>
+                  <input type="checkbox" checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
+                  SAM昇格済み（非表示中）も表示する
+                </label>
+                {visibleStudents.map((s) => {
+                  const m = s.months.find((m) => m.month === selectedMonth);
+                  const sc = m ? totalScore(m) : null;
+                  const pct = sc !== null ? Math.round((sc / MAX_SCORE) * 100) : 0;
+                  const archived = !isActive(s);
+                  const isSelected = selected?.id === s.id;
+                  return (
+                    <div key={s.id} onClick={() => { setSelected(s); setAiComment(""); setActiveTab("overview"); setActiveView(m ? "detail" : "ranking"); setShowMemberSwitcher(false); }}
+                      style={{ padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", background: isSelected ? theme.accentA(0.08) : "transparent", opacity: m ? (archived ? 0.55 : 1) : 0.4, cursor: "pointer" }}>
+                      <span style={{ fontSize: "14px", fontWeight: isSelected ? "600" : "400" }}>{s.name}{archived ? "（SAM）" : ""}</span>
+                      <span style={{ fontSize: "13px", color: theme.accent, fontFamily: "monospace" }}>{m ? `${pct}%` : "—"}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
         <div style={{ width: "220px", borderRight: `1px solid ${theme.t(0.06)}`, padding: "16px 0", overflowY: "auto", flexShrink: 0 }}>
           <div style={{ padding: "0 16px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: "16px", color: theme.t(0.3), letterSpacing: "2px" }}>IN メンバー</span>
@@ -1224,9 +1263,10 @@ export default function INDashboard() {
             );
           })}
         </div>
+        )}
 
         {/* メインエリア */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "16px" : "20px 24px" }}>
 
           {/* ランキングビュー */}
           {activeView === "ranking" && (
@@ -1333,9 +1373,9 @@ export default function INDashboard() {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", gap: "4px", marginBottom: "20px", borderBottom: `1px solid ${theme.t(0.08)}` }}>
+                  <div style={{ display: "flex", gap: "4px", marginBottom: "20px", borderBottom: `1px solid ${theme.t(0.08)}`, overflowX: isMobile ? "auto" : "visible" }}>
                     {[["overview", "概要"], ["edit", "編集"], ["pdca", "PDCA"], ["trends", "推移"], ["ai", "AI分析"]].map(([key, label]) => (
-                      <button key={key} onClick={() => setActiveTab(key)} style={{ padding: "8px 16px", background: "transparent", border: "none", borderBottom: activeTab === key ? `2px solid ${theme.accent}` : "2px solid transparent", color: activeTab === key ? theme.accent : theme.t(0.4), cursor: "pointer", fontSize: "13px", fontWeight: activeTab === key ? "600" : "400", fontFamily: "'Noto Sans JP', sans-serif", marginBottom: "-1px" }}>
+                      <button key={key} onClick={() => setActiveTab(key)} style={{ padding: "8px 16px", background: "transparent", border: "none", borderBottom: activeTab === key ? `2px solid ${theme.accent}` : "2px solid transparent", color: activeTab === key ? theme.accent : theme.t(0.4), cursor: "pointer", fontSize: "13px", fontWeight: activeTab === key ? "600" : "400", fontFamily: "'Noto Sans JP', sans-serif", marginBottom: "-1px", flexShrink: 0, whiteSpace: "nowrap" }}>
                         {label}
                       </button>
                     ))}
@@ -1343,7 +1383,7 @@ export default function INDashboard() {
 
                   {activeTab === "overview" && (
                     <div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
                         <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                           <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "12px", alignSelf: "flex-start" }}>定性評価レーダー</div>
                           <RadarChart data={selected.months.filter((_, i) => i <= monthIdx)} size={200} subitemsConfig={configForSelectedMonth} theme={theme} />
@@ -1386,7 +1426,7 @@ export default function INDashboard() {
                       </div>
                       <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px" }}>
                         <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "16px" }}>定量評価</div>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: "12px" }}>
                           {Object.entries(monthData.定量).map(([key, val]) => (
                             <div key={key} style={{ background: theme.t(0.04), borderRadius: "8px", padding: "12px", textAlign: "center" }}>
                               <div style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.5), marginBottom: "6px" }}>{key}</div>
