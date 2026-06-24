@@ -927,6 +927,95 @@ function EditPanel({ students, student, month, monthData, subitemsConfig, onSave
 }
 
 /* ============================================================
+   個人詳細：PDCAタブ（月初のP・D、月末のC・Aを本人 or PMが記入）
+   ============================================================ */
+function PDCACard({ title, badge, fields, values, onChange, theme }) {
+  return (
+    <div style={{ background: theme.bgSolid, borderRadius: "12px", border: `1px solid ${theme.t(0.08)}`, padding: "20px", marginBottom: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
+        <div style={{ fontSize: "15px", fontWeight: "600", color: theme.accent }}>{title}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          {badge}
+          <select value={values.enteredBy || "本人"} onChange={(e) => onChange("enteredBy", e.target.value)} style={{ fontSize: "12px", padding: "4px 8px", borderRadius: "6px", border: `1px solid ${theme.t(0.15)}`, background: theme.t(0.04), color: theme.t(0.6) }}>
+            <option value="本人">記入者：本人</option>
+            <option value="PM">記入者：PM</option>
+          </select>
+        </div>
+      </div>
+      {fields.map(([key, label]) => (
+        <div key={key} style={{ marginBottom: key === fields[fields.length - 1][0] ? 0 : "14px" }}>
+          <div style={{ fontSize: "13px", color: theme.t(0.5), marginBottom: "6px" }}>{label}</div>
+          <textarea
+            value={values[key] || ""}
+            onChange={(e) => onChange(key, e.target.value)}
+            style={{ width: "100%", minHeight: "60px", fontSize: "14px", padding: "10px 12px", borderRadius: "8px", border: `1px solid ${theme.t(0.15)}`, background: theme.t(0.03), color: theme.text, fontFamily: "inherit", resize: "vertical" }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PDCAPanel({ students, student, month, monthData, prevMonth, prevMonthData, onSave, theme }) {
+  const [plan, setPlan] = useState(() => ({ ...(monthData.pdca || {}) }));
+  const [prevCA, setPrevCA] = useState(() => ({ ...(prevMonthData?.pdca || {}) }));
+  const [savedPD, setSavedPD] = useState(false);
+  const [savedCA, setSavedCA] = useState(false);
+
+  async function saveMonth(targetMonth, pdcaPatch, onDone) {
+    const updated = students.map((s) => {
+      if (s.id !== student.id) return s;
+      return {
+        ...s,
+        months: s.months.map((m) => (m.month === targetMonth ? { ...m, pdca: { ...(m.pdca || {}), ...pdcaPatch } } : m)),
+      };
+    });
+    await fbSet("students", studentsToFirebaseShape(updated));
+    onSave(updated);
+    onDone();
+  }
+
+  return (
+    <div>
+      <PDCACard
+        title={`${monthLabel(month)}の目標（Plan / Do）`}
+        badge={<span style={{ fontSize: "11px", color: theme.t(0.4) }}>{monthLabel(month)}に設定・編集可</span>}
+        fields={[["plan", "P　今月の目標"], ["do", "D　行動計画"]]}
+        values={plan}
+        onChange={(k, v) => { setPlan((p) => ({ ...p, [k]: v })); setSavedPD(false); }}
+        theme={theme}
+      />
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px", marginBottom: "28px" }}>
+        {savedPD && <span style={{ fontSize: "13px", color: "#34A853" }}>保存しました</span>}
+        <button onClick={() => saveMonth(month, plan, () => setSavedPD(true))} style={{ padding: "9px 18px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>P・Dを保存</button>
+      </div>
+
+      {prevMonth ? (
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <span style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.6) }}>{monthLabel(prevMonth)}のふりかえり（Check / Action）</span>
+          </div>
+          <PDCACard
+            title=""
+            badge={null}
+            fields={[["check", "C　できた点・できなかった点"], ["action", "A　次月への改善策"]]}
+            values={prevCA}
+            onChange={(k, v) => { setPrevCA((p) => ({ ...p, [k]: v })); setSavedCA(false); }}
+            theme={theme}
+          />
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px" }}>
+            {savedCA && <span style={{ fontSize: "13px", color: "#34A853" }}>保存しました</span>}
+            <button onClick={() => saveMonth(prevMonth, prevCA, () => setSavedCA(true))} style={{ padding: "9px 18px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>C・Aを保存</button>
+          </div>
+        </>
+      ) : (
+        <div style={{ fontSize: "12px", color: theme.t(0.4) }}>前月のデータがまだありません。</div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
    メイン
    ============================================================ */
 export default function INDashboard() {
@@ -1264,7 +1353,7 @@ export default function INDashboard() {
                   </div>
 
                   <div style={{ display: "flex", gap: "4px", marginBottom: "20px", borderBottom: `1px solid ${theme.t(0.08)}` }}>
-                    {[["overview", "概要"], ["edit", "編集"], ["trends", "推移"], ["ai", "AI分析"]].map(([key, label]) => (
+                    {[["overview", "概要"], ["edit", "編集"], ["pdca", "PDCA"], ["trends", "推移"], ["ai", "AI分析"]].map(([key, label]) => (
                       <button key={key} onClick={() => setActiveTab(key)} style={{ padding: "8px 16px", background: "transparent", border: "none", borderBottom: activeTab === key ? `2px solid ${theme.accent}` : "2px solid transparent", color: activeTab === key ? theme.accent : theme.t(0.4), cursor: "pointer", fontSize: "13px", fontWeight: activeTab === key ? "600" : "400", fontFamily: "'Noto Sans JP', sans-serif", marginBottom: "-1px" }}>
                         {label}
                       </button>
@@ -1332,6 +1421,19 @@ export default function INDashboard() {
 
                   {activeTab === "edit" && (
                     <EditPanel students={students} student={selected} month={selectedMonth} monthData={monthData} subitemsConfig={configForSelectedMonth} onSave={handleStudentsUpdate} theme={theme} />
+                  )}
+
+                  {activeTab === "pdca" && (
+                    <PDCAPanel
+                      students={students}
+                      student={selected}
+                      month={selectedMonth}
+                      monthData={monthData}
+                      prevMonth={prevData ? prevData.month : null}
+                      prevMonthData={prevData}
+                      onSave={handleStudentsUpdate}
+                      theme={theme}
+                    />
                   )}
 
                   {activeTab === "trends" && (
