@@ -1525,6 +1525,8 @@ export default function INDashboard() {
       )}
 
       <style>{`
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
