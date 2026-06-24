@@ -956,61 +956,42 @@ function PDCACard({ title, badge, fields, values, onChange, theme }) {
   );
 }
 
-function PDCAPanel({ students, student, month, monthData, prevMonth, prevMonthData, onSave, theme }) {
-  const [plan, setPlan] = useState(() => ({ ...(monthData.pdca || {}) }));
-  const [prevCA, setPrevCA] = useState(() => ({ ...(prevMonthData?.pdca || {}) }));
-  const [savedPD, setSavedPD] = useState(false);
-  const [savedCA, setSavedCA] = useState(false);
+function PDCAPanel({ students, student, month, monthData, onSave, theme }) {
+  const [pdca, setPdca] = useState(() => ({ ...(monthData.pdca || {}) }));
+  const [saved, setSaved] = useState(false);
 
-  async function saveMonth(targetMonth, pdcaPatch, onDone) {
+  async function handleSave() {
     const updated = students.map((s) => {
       if (s.id !== student.id) return s;
       return {
         ...s,
-        months: s.months.map((m) => (m.month === targetMonth ? { ...m, pdca: { ...(m.pdca || {}), ...pdcaPatch } } : m)),
+        months: s.months.map((m) => (m.month === month ? { ...m, pdca: { ...pdca } } : m)),
       };
     });
     await fbSet("students", studentsToFirebaseShape(updated));
     onSave(updated);
-    onDone();
+    setSaved(true);
   }
 
   return (
     <div>
       <PDCACard
-        title={`${monthLabel(month)}の目標（Plan / Do）`}
-        badge={<span style={{ fontSize: "11px", color: theme.t(0.4) }}>{monthLabel(month)}に設定・編集可</span>}
-        fields={[["plan", "P　今月の目標"], ["do", "D　行動計画"]]}
-        values={plan}
-        onChange={(k, v) => { setPlan((p) => ({ ...p, [k]: v })); setSavedPD(false); }}
+        title={`${monthLabel(month)}のPDCA`}
+        badge={null}
+        fields={[
+          ["plan", "P　今月の目標"],
+          ["do", "D　行動計画"],
+          ["check", "C　できた点・できなかった点"],
+          ["action", "A　次月への改善策"],
+        ]}
+        values={pdca}
+        onChange={(k, v) => { setPdca((p) => ({ ...p, [k]: v })); setSaved(false); }}
         theme={theme}
       />
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px", marginBottom: "28px" }}>
-        {savedPD && <span style={{ fontSize: "13px", color: "#34A853" }}>保存しました</span>}
-        <button onClick={() => saveMonth(month, plan, () => setSavedPD(true))} style={{ padding: "9px 18px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>P・Dを保存</button>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px" }}>
+        {saved && <span style={{ fontSize: "13px", color: "#34A853" }}>保存しました</span>}
+        <button onClick={handleSave} style={{ padding: "9px 18px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>保存</button>
       </div>
-
-      {prevMonth ? (
-        <>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-            <span style={{ fontSize: "13px", fontWeight: "600", color: theme.t(0.6) }}>{monthLabel(prevMonth)}のふりかえり（Check / Action）</span>
-          </div>
-          <PDCACard
-            title=""
-            badge={null}
-            fields={[["check", "C　できた点・できなかった点"], ["action", "A　次月への改善策"]]}
-            values={prevCA}
-            onChange={(k, v) => { setPrevCA((p) => ({ ...p, [k]: v })); setSavedCA(false); }}
-            theme={theme}
-          />
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "10px" }}>
-            {savedCA && <span style={{ fontSize: "13px", color: "#34A853" }}>保存しました</span>}
-            <button onClick={() => saveMonth(prevMonth, prevCA, () => setSavedCA(true))} style={{ padding: "9px 18px", background: theme.accentA(0.15), border: `1px solid ${theme.accentA(0.45)}`, borderRadius: "8px", color: theme.accent, cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>C・Aを保存</button>
-          </div>
-        </>
-      ) : (
-        <div style={{ fontSize: "12px", color: theme.t(0.4) }}>前月のデータがまだありません。</div>
-      )}
     </div>
   );
 }
@@ -1429,8 +1410,6 @@ export default function INDashboard() {
                       student={selected}
                       month={selectedMonth}
                       monthData={monthData}
-                      prevMonth={prevData ? prevData.month : null}
-                      prevMonthData={prevData}
                       onSave={handleStudentsUpdate}
                       theme={theme}
                     />
