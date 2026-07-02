@@ -665,6 +665,86 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
 }
 
 /* ============================================================
+   カテゴリ別スコア：アコーディオン（大項目で開閉、小項目を表示）
+   ============================================================ */
+function CategoryAccordion({ monthData, prevData, configForMonth, theme }) {
+  const [openCats, setOpenCats] = useState(new Set([CATEGORY_ORDER[0]]));
+
+  function toggle(cat) {
+    setOpenCats((prev) => {
+      const next = new Set(prev);
+      next.has(cat) ? next.delete(cat) : next.add(cat);
+      return next;
+    });
+  }
+
+  return (
+    <div>
+      <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "12px" }}>カテゴリ別スコア</div>
+      {CATEGORY_ORDER.map((cat) => {
+        const val = monthData.定性[cat] || 0;
+        const max = categoryMax(configForMonth, cat);
+        const diff = prevData ? val - (prevData.定性[cat] || 0) : null;
+        const pct = Math.round((val / max) * 100);
+        const isOpen = openCats.has(cat);
+        const items = configForMonth[cat] || [];
+        const detail = monthData.定性詳細?.[cat];
+        const comment = monthData.定性コメント?.[cat];
+
+        return (
+          <div key={cat} style={{ border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", overflow: "hidden", marginBottom: "10px" }}>
+            {/* 大項目ヘッダー（タップで開閉） */}
+            <div onClick={() => toggle(cat)} style={{ padding: "13px 16px", cursor: "pointer", background: theme.t(0.03), display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ fontSize: "15px", fontWeight: "600", color: CATEGORY_COLORS[cat], minWidth: "90px" }}>{cat}</span>
+              <div style={{ flex: 1, height: "8px", background: theme.t(0.08), borderRadius: "4px", overflow: "hidden" }}>
+                <div style={{ width: `${pct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "4px", transition: "width 0.4s" }} />
+              </div>
+              {diff !== null && (
+                <span style={{ fontSize: "13px", fontFamily: "monospace", color: diff > 0 ? "#34A853" : diff < 0 ? "#F06292" : theme.t(0.3), minWidth: "28px", textAlign: "right" }}>
+                  {diff > 0 ? `+${diff}` : diff === 0 ? "±0" : diff}
+                </span>
+              )}
+              <span style={{ fontSize: "18px", fontWeight: "700", fontFamily: "monospace", minWidth: "60px", textAlign: "right" }}>
+                {val}<span style={{ fontSize: "12px", fontWeight: "400", color: theme.t(0.35) }}>/{max}</span>
+              </span>
+              <span style={{ fontSize: "12px", color: theme.t(0.35) }}>{isOpen ? "▲" : "▼"}</span>
+            </div>
+
+            {/* 小項目（展開時のみ表示） */}
+            {isOpen && (
+              <div style={{ background: theme.t(0.015), borderTop: `1px solid ${theme.t(0.07)}`, padding: "12px 16px" }}>
+                {items.length > 0 ? items.map((item) => {
+                  const v = detail?.[item.key] !== undefined ? Number(detail[item.key]) : null;
+                  const iPct = v !== null ? Math.round((v / item.max) * 100) : 0;
+                  return (
+                    <div key={item.key} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                      <span style={{ fontSize: "13px", color: theme.t(0.6), flex: 1 }}>{item.label}</span>
+                      <div style={{ width: "100px", height: "6px", background: theme.t(0.08), borderRadius: "3px", flexShrink: 0 }}>
+                        {v !== null && <div style={{ width: `${iPct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "3px" }} />}
+                      </div>
+                      <span style={{ fontSize: "13px", fontFamily: "monospace", color: theme.text, minWidth: "42px", textAlign: "right" }}>
+                        {v !== null ? `${v}/${item.max}` : `—/${item.max}`}
+                      </span>
+                    </div>
+                  );
+                }) : (
+                  <div style={{ fontSize: "13px", color: theme.t(0.35) }}>小項目データなし</div>
+                )}
+                {comment && (
+                  <div style={{ fontSize: "13px", color: theme.t(0.5), marginTop: "6px", padding: "8px 10px", background: theme.t(0.03), borderRadius: "6px" }}>
+                    {comment}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ============================================================
    評価項目の入力行（スライダー方式）
    ============================================================ */
 function SliderRow({ label, max, value, onChange, theme }) {
@@ -1389,39 +1469,7 @@ export default function INDashboard() {
                           <RadarChart data={selected.months.filter((_, i) => i <= monthIdx)} size={200} subitemsConfig={configForSelectedMonth} theme={theme} />
                         </div>
                         <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px" }}>
-                          <div style={{ fontSize: "13px", color: theme.t(0.4), marginBottom: "16px" }}>カテゴリ別スコア</div>
-                          {CATEGORY_ORDER.map((cat) => {
-                            const val = monthData.定性[cat] || 0;
-                            const max = categoryMax(configForSelectedMonth, cat);
-                            const diff = prevData ? val - (prevData.定性[cat] || 0) : null;
-                            const pct = Math.round((val / max) * 100);
-                            const detail = monthData.定性詳細?.[cat];
-                            const comment = monthData.定性コメント?.[cat];
-                            return (
-                              <div key={cat} style={{ marginBottom: "12px" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
-                                  <div style={{ fontSize: "16px", color: CATEGORY_COLORS[cat], fontWeight: "500" }}>{cat}</div>
-                                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                                    {diff !== null && <span style={{ fontSize: "16px", color: diff > 0 ? "#81C784" : diff < 0 ? "#F06292" : theme.t(0.3), fontFamily: "monospace" }}>{diff > 0 ? `+${diff}` : diff}</span>}
-                                    <span style={{ fontSize: "20px", fontWeight: "700", fontFamily: "monospace" }}>{val}<span style={{ fontSize: "14px", fontWeight: "400", color: theme.t(0.35) }}>/{max}</span></span>
-                                  </div>
-                                </div>
-                                <div style={{ height: "10px", background: theme.t(0.08), borderRadius: "5px" }}>
-                                  <div style={{ width: `${pct}%`, height: "100%", background: CATEGORY_COLORS[cat], borderRadius: "5px" }} />
-                                </div>
-                                {comment && <div style={{ fontSize: "16px", color: theme.t(0.4), marginTop: "4px" }}>{comment}</div>}
-                                {detail && (
-                                  <div style={{ marginTop: "4px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                                    {Object.entries(detail).map(([k, v]) => {
-                                      const item = (configForSelectedMonth[cat] || []).find((s) => s.key === k);
-                                      if (!item) return null;
-                                      return <span key={k} style={{ fontSize: "13px", color: theme.t(0.35), background: theme.t(0.04), borderRadius: "4px", padding: "2px 6px" }}>{item.label}: {v}/{item.max}</span>;
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                          <CategoryAccordion monthData={monthData} prevData={prevData} configForMonth={configForSelectedMonth} theme={theme} />
                         </div>
                       </div>
                       <div style={{ background: theme.t(0.03), border: `1px solid ${theme.t(0.08)}`, borderRadius: "12px", padding: "20px" }}>
