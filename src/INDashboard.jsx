@@ -71,7 +71,6 @@ async function exchangeGoogleIdToken(idToken) {
 }
 
 async function generateGeminiComment(student, targetMonth) {
-  if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY が未設定です");
   const monthData = student.months.find((m) => m.month === targetMonth);
   const idx = student.months.findIndex((m) => m.month === targetMonth);
   const prev = idx > 0 ? student.months[idx - 1] : null;
@@ -80,13 +79,14 @@ async function generateGeminiComment(student, targetMonth) {
     : Object.keys(monthData.定性).map((k) => `${k}: ${monthData.定性[k]}点`);
   const prompt = `あなたは学生インターンのマネジメントを支援するAIです。以下の評価データから、PMが面談前に読む簡潔なサマリーを生成してください。\n対象者：${student.name}（${monthLabel(targetMonth)}）\n評価変化：${changes.join("、")}\n営業pt: ${monthData.定量.営業pt} / KPI達成率: ${monthData.定量.KPI達成率}%\n1.全体サマリー 2.伸びている点 3.要注目点 4.面談で確認すべきこと、の順で簡潔に。`;
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+  const res = await fetch("/api/gemini", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+    body: JSON.stringify({ prompt }),
   });
+  if (!res.ok) throw new Error("APIエラーが発生しました");
   const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") || "コメント生成に失敗しました";
+  return data.text || "生成に失敗しました";
 }
 function hexToRgba(hex, a) {
   const h = hex.replace("#", "");
@@ -1542,7 +1542,7 @@ export default function INDashboard() {
                           {monthLabel(selectedMonth)}の評価データをAIが分析し、面談前サマリーを生成します
                         </div>
                         <div style={{ display: "flex", gap: "6px", marginBottom: "14px" }}>
-                          {[["claude", "Claude"], ["gemini", "Gemini（準備中）"]].map(([key, label]) => (
+                          {[["claude", "Claude"], ["gemini", "Gemini"]].map(([key, label]) => (
                             <button key={key} onClick={() => setAiProvider(key)} style={{ padding: "5px 12px", background: aiProvider === key ? theme.accentA(0.15) : "transparent", border: `1px solid ${aiProvider === key ? theme.accentA(0.5) : theme.t(0.12)}`, borderRadius: "20px", color: aiProvider === key ? theme.accent : theme.t(0.45), cursor: "pointer", fontSize: "13px" }}>{label}</button>
                           ))}
                         </div>
