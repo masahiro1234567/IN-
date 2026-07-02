@@ -12,7 +12,8 @@ export default async function handler(req, res) {
       }
     );
     const data = await r.json();
-    res.status(200).json({ debug: data });
+    const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") || "生成に失敗しました";
+    res.status(200).json({ text });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
