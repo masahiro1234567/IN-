@@ -668,7 +668,7 @@ function AdminModal({ configHistory, onSave, onClose, theme }) {
    カテゴリ別スコア：アコーディオン（大項目で開閉、小項目を表示）
    ============================================================ */
 function CategoryAccordion({ monthData, prevData, configForMonth, theme }) {
-  const [openCats, setOpenCats] = useState(new Set([CATEGORY_ORDER[0]]));
+  const [openCats, setOpenCats] = useState(new Set());
 
   function toggle(cat) {
     setOpenCats((prev) => {
